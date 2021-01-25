@@ -5,6 +5,11 @@ import java.text.ParseException;
 import java.util.Date;
 
 import com.application.se2.misc.EntityProperty;
+import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.transaction.Transactional;
 
 
 /**
@@ -16,16 +21,24 @@ import com.application.se2.misc.EntityProperty;
  * 
  * @author sgra64
  */
-public class Note implements Serializable {
+@Entity
+@Table(name="Note")
+public class Note implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private static final String FieldSeparator = ";; ";
 	private static long lastTimeStamp = 0L;
-
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "id")
+private int id;
+@Column(name="timeStamp")
 	private Date timeStamp = null;		// TimeStamp part of Note.
-
+@Column(name="text")
 	private String noteText = null;		// Text part of Note.
-
+//@ManyToOne
+//@JoinColumn(name="FK_Customer")
+//private Customer customer;
 
 	/**
 	 * Default constructor needed by JSON deserialization and Hibernate (private
@@ -35,6 +48,7 @@ public class Note implements Serializable {
 	public Note() {
 		this.timeStamp = new Date();
 		this.noteText = "";
+		//this.customer=null;
 	}
 
 	/**
@@ -43,7 +57,8 @@ public class Note implements Serializable {
 	 * 
 	 * @param noteStr input to parse Note instance.
 	 */
-	public Note( String noteStr ) {
+	public Note( String noteStr) {
+		//this.customer=customer;
 		Object[] parts = parselogStr( noteStr );
 		this.timeStamp = parts[0]==null? null : (Date)parts[0];
 		this.noteText = (String)parts[1];
